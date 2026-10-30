@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --ink: 11 11 12; --card: 20 20 22; --raised: 28 28 31; --fg: 255 255 255; --mute: 161 161 170;
+  --accent: 167 139 250; --good: 110 231 183; --warn: 251 191 36; --bad: 251 113 133;
+}
+:root.light {
+  color-scheme: light;
+  --ink: 250 250 250; --card: 255 255 255; --raised: 241 241 245; --fg: 17 17 17; --mute: 102 102 102;
+  --accent: 124 92 224; --good: 22 163 74; --warn: 217 119 6; --bad: 220 38 38;
+}
+.light .shadow-soft { box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 12px 28px -14px rgba(0,0,0,0.16); }
+.light .shadow-glow { box-shadow: 0 10px 24px -8px rgba(124,92,224,0.5); }
+
+html, body, #root { min-height: 100%; }
+body {
+  background: rgb(var(--ink));
+  color: rgb(var(--fg));
+  font-family: Inter, system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .25s;
+}
+input, select, textarea, button { font: inherit; color: inherit; }
+input, select, textarea { font-size: 16px; } /* 16px+ stops iOS zooming on focus */
+input::placeholder, textarea::placeholder { color: rgb(var(--mute) / 0.6); }
+::-webkit-scrollbar { display: none; }
+
+@layer components {
+  .card { @apply bg-card rounded-card shadow-soft; }
+  .field { @apply w-full bg-raised rounded-2xl px-4 py-3 text-[16px] outline-none border border-transparent focus:border-accent/60 transition-colors; }
+  .chip { @apply shrink-0 rounded-full px-4 py-2 text-sm bg-raised text-mute transition-colors; }
+  .chip-on { @apply bg-accent text-onaccent font-medium; }
+  .btn { @apply rounded-2xl bg-accent text-onaccent font-semibold py-3.5 px-5 active:scale-[0.98] transition-transform disabled:opacity-40; }
+  .btn-ghost { @apply rounded-2xl bg-raised text-fg font-medium py-3.5 px-5 active:scale-[0.98] transition-transform; }
+  .btn-danger { @apply rounded-2xl bg-bad/15 text-bad font-medium py-3.5 px-5 active:scale-[0.98] transition-transform; }
+  .label { @apply text-xs text-mute mb-2 block; }
+  .tap { @apply active:scale-[0.97] transition-transform; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
