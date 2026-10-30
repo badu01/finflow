@@ -79,8 +79,8 @@ export default function Home({ onAdd, go, onOpen }) {
           {(user?.name || user?.email || 'F')[0].toUpperCase()}
         </button>
         <div className="flex-1 min-w-0 ml-1">
-          <p className="text-xs text-mute">{greet()}</p>
-          <h1 className="font-display text-3xl font-semibold leading-none">FinFlow</h1>
+          {/* <p className="text-xs text-mute">{greet()}</p> */}
+          <h1 className="font-finflow text-3xl font-semibold leading-none">Finflow</h1>
         </div>
         <IconBtn icon={Search} label="Search" onClick={() => go('search')} />
         <IconBtn icon={Bell} label="Notifications" onClick={() => go('notifications')} badge={urgent.length} />

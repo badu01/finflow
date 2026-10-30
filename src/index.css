@@ -45,3 +45,11 @@ input::placeholder, textarea::placeholder { color: rgb(var(--mute) / 0.6); }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+@font-face {
+  font-family: 'FinFlow';
+  src: url('./fonts/finflow-font.woff') format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}

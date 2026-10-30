@@ -31,7 +31,7 @@ const screens = {
 const Login = lazy(() => import('./pages/Login'))
 
 const Splash = () => (
-  <div className="min-h-dvh grid place-items-center"><p className="font-display text-4xl text-accent animate-pulse">FinFlow</p></div>
+  <div className="min-h-dvh grid place-items-center"><p className="font-finflow text-4xl text-accent animate-pulse">Finflow</p></div>
 )
 
 export default function App() {

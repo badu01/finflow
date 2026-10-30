@@ -127,7 +127,7 @@ function Shell({ children }) {
   return (
     <div className="min-h-dvh max-w-md mx-auto px-6 py-10 flex flex-col justify-center">
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-        <h1 className="font-display text-6xl font-semibold">FinFlow</h1>
+        <h1 className="font-finflow text-6xl font-semibold">Finflow</h1>
         <p className="text-mute mt-2 mb-8">Every rupee, quietly accounted for.</p>
         {children}
       </motion.div>
