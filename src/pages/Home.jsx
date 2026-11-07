@@ -16,9 +16,7 @@ import { budgetRows, dailyBudget } from '../lib/budget'
 import { buildAlerts } from '../lib/alerts'
 import { healthScore } from '../lib/insights'
 import { useChart } from '../lib/theme'
-import { addDays, addMonths, between, byCategory, daysIn, exp, inc, newest, startOfDay, startOfMonth, startOfWeek, sum } from '../lib/stats'
-
-const greet = () => { const h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening' }
+import { addDays, addMonths, between, byCategory, daysIn, exp, inc, newest, startOfDay, startOfMonth, startOfWeek, sum, budgeted } from '../lib/stats'
 
 export default function Home({ onAdd, go, onOpen }) {
   const data = useData()
@@ -33,7 +31,8 @@ export default function Home({ onAdd, go, onOpen }) {
     const mStart = startOfMonth(now), mEnd = addMonths(now, 1), pStart = addMonths(now, -1)
     const monthTx = transactions.filter((t) => between(t, mStart, mEnd))
     const prevTx = transactions.filter((t) => between(t, pStart, mStart))
-    const spent = sum(exp(monthTx)), earned = sum(inc(monthTx))
+    const spent = sum(budgeted(exp(monthTx)))
+    const spentAll = sum(exp(monthTx)), earned = sum(inc(monthTx))
     const rows = budgetRows(budgets, transactions)
     const all = rows.find((b) => b.category === 'all')
     const d0 = startOfDay(now)
@@ -58,10 +57,10 @@ export default function Home({ onAdd, go, onOpen }) {
     const tPrev = byCategory(prevTx).find((c) => c.name === 'Travel')?.value || 0
     if (tPrev > 0 && tNow > tPrev) insights.push('Your travel expenses increased this month.')
     return {
-      now, stats, totals, spent, earned, all, today, week, cats, series, dim, insights,
+      now, stats, totals, spent,spentAll, earned, all, today, week, cats, series, dim, insights,
       alerts: buildAlerts(data, stats), bills: upcoming(bills, accounts, stats),
       daily: dailyBudget(budgets, transactions), health: healthScore(data, stats), projected: (spent / now.getDate()) * dim, daysLeft: dim - now.getDate(),
-      rate: earned ? Math.round(((earned - spent) / earned) * 100) : null
+      rate: earned ? Math.round(((earned - spentAll) / earned) * 100) : null
     }
   }, [transactions, budgets, accounts, bills, data.goals])
 
@@ -109,6 +108,7 @@ export default function Home({ onAdd, go, onOpen }) {
             <Row label="Remaining" v={m.all ? inr(m.all.limit - m.spent) : '—'} tone={m.all && m.all.limit - m.spent < 0 ? 'text-bad' : 'text-good'} />
           </div>
         </div>
+        {m.outside > 0 && <p className="text-xs text-mute mt-4">{inr(m.outside)} more spent outside your budget</p>}
         {m.all && (
           <p className="text-xs text-mute mt-5">
             {m.daysLeft} days left · pace says {inr(m.projected)}
@@ -173,10 +173,10 @@ export default function Home({ onAdd, go, onOpen }) {
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div><p className="text-xs text-mute">Income</p><p className="font-display text-3xl font-semibold text-good tabular-nums">{inr(m.earned)}</p></div>
-          <div><p className="text-xs text-mute">Expenses</p><p className="font-display text-3xl font-semibold tabular-nums">{inr(m.spent)}</p></div>
+          <div><p className="text-xs text-mute">Expenses</p><p className="font-display text-3xl font-semibold tabular-nums">{inr(m.spentAll)}</p></div>
         </div>
         <div className="mt-4 h-1.5 rounded-full bg-raised overflow-hidden flex">
-          <div className="bg-good" style={{ width: `${m.earned + m.spent ? (m.earned / (m.earned + m.spent)) * 100 : 50}%` }} />
+          <div className="bg-good" style={{ width: `${m.earned + m.spentAll ? (m.earned / (m.earned + m.spentAll)) * 100 : 50}%` }} />
           <div className="bg-accent flex-1" />
         </div>
       </section>

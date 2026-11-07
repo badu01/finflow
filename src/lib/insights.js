@@ -1,6 +1,6 @@
 import { budgetRows } from './budget'
 import { upcoming } from './bills'
-import { addDays, addMonths, between, byDay, daysIn, exp, inc, key, startOfDay, startOfMonth, sum } from './stats'
+import { addDays, addMonths, between, byDay, daysIn, exp, inc, key, startOfDay, startOfMonth, sum,budgeted } from './stats'
 
 const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x))
 
@@ -60,9 +60,12 @@ export function streaks(data) {
   const s = (d) => sum(spend[key(d)] || [])
   const first = transactions.length ? startOfDay(new Date(Math.min(...transactions.map((t) => new Date(t.occurred_at))))) : today
   const all = budgets.find((b) => b.category === 'all')
-  const last30 = Array.from({ length: 30 }, (_, i) => s(addDays(today, -i - 1)))
+  const last30 = Array.from({ length: 30 }, (_, i) => sb(addDays(today, -i - 1)))
   const custom = budgets.find((b) => b.category === 'daily')
   const allowance = custom ? custom.amount : all ? all.amount / daysIn(now) : last30.reduce((a, b) => a + b, 0) / 30 || Infinity
+
+  const spendB = byDay(budgeted(exp(transactions)))
+  const sb = (d) => sum[spendB[key(d) || []]]
 
   let under = 0
   for (let d = today; d >= first; d = addDays(d, -1)) { if (s(d) <= allowance) under++; else break }

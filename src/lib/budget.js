@@ -1,11 +1,11 @@
-import { addDays, addMonths, between, daysIn, exp, startOfDay, startOfMonth, sum } from './stats'
+import { addDays, addMonths, between, daysIn, exp, startOfDay, startOfMonth, sum, budgeted } from './stats'
 
 // Per-budget spend, limit (with optional rollover of last month's unspent amount) and progress.
 export function budgetRows(budgets, txs, now = new Date()) {
   const ms = startOfMonth(now), me = addMonths(now, 1), ps = addMonths(now, -1)
   const cur = txs.filter((t) => between(t, ms, me))
   const prev = txs.filter((t) => between(t, ps, ms))
-  const sp = (l, c) => sum(exp(l).filter((t) => c === 'all' || t.category === c))
+  const sp = (l, c) => sum(budgeted(exp(l).filter((t) => c === 'all' || t.category === c)))
   return budgets.filter((b) => b.category !== 'daily').map((b) => {
     const spent = sp(cur, b.category)
     const carry = b.rollover && prev.length ? Math.max(0, b.amount - sp(prev, b.category)) : 0
@@ -28,7 +28,7 @@ export function dailyBudget(budgets, txs, now = new Date()) {
   const all = budgetRows(budgets, txs, now).find((b) => b.category === 'all')
   if (!custom && !all) return null
   const d0 = startOfDay(now)
-  const today = sum(exp(txs.filter((t) => between(t, d0, addDays(d0, 1)))))
+  const today = sum(budgeted(exp(txs.filter((t) => between(t, d0, addDays(d0, 1))))))
   const dim = daysIn(now)
   const amount = custom ? custom.amount : all.limit / dim
   const left = amount - today

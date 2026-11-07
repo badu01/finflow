@@ -33,7 +33,8 @@ export default function AddTransactionSheet({ open, onClose, initial, defaultTyp
       type, amount: initial?.amount ? String(initial.amount) : '', category: initial?.category && type === 'expense' ? initial.category : '',
       subcategory: initial?.subcategory || '', merchant: initial?.merchant || '', payment_method: initial?.payment_method || (acct ? ACCOUNT_KINDS[accounts.find((a) => a.id === acct)?.kind]?.method : 'UPI') || 'UPI',
       account_id: acct, to_account_id: initial?.to_account_id || null, source: initial?.source || 'Salary',
-      notes: initial?.notes || '', location: initial?.location || '', date: key(now), time: timeKey(now), repeat: 'none'
+      notes: initial?.notes || '', location: initial?.location || '', date: key(now), time: timeKey(now), repeat: 'none',
+      counts: initial?.counts_toward_budget !== false
     })
   }, [open, initial, defaultType])
 
@@ -62,6 +63,7 @@ export default function AddTransactionSheet({ open, onClose, initial, defaultTyp
         subcategory: isX && f.subcategory ? f.subcategory : null,
         merchant: f.type === 'transfer' ? '' : f.merchant.trim(),
         payment_method: f.payment_method, account_id: f.account_id || null,
+        counts_toward_budget: isX ? f.counts : true,
         to_account_id: f.type === 'transfer' ? f.to_account_id : null,
         source: f.type === 'income' ? f.source : null,
         notes: f.notes.trim(), location: f.location.trim(), receipt_path,
@@ -175,6 +177,23 @@ export default function AddTransactionSheet({ open, onClose, initial, defaultTyp
           <input id="t" type="time" className="field" value={f.time || ''} onChange={(e) => set('time', e.target.value)} />
         </div>
       </div>
+
+
+      
+      {
+      // toggle button hereeeeeeee
+      }
+            {f.type === 'expense' && (
+        <button type="button" role="switch" aria-checked={f.counts} onClick={() => set('counts', !f.counts)} className="flex items-center justify-between w-full bg-raised rounded-2xl px-4 py-3 text-left mb-4">
+          <span><span className="block text-sm">Deduct from budget</span><span className="block text-xs text-mute">Turn off for things like sending money to family. It still counts as an expense.</span></span>
+          <span className={`h-6 w-11 rounded-full p-0.5 shrink-0 ml-3 transition-colors ${f.counts ? 'bg-accent' : 'bg-fg/15'}`}><span className={`block h-5 w-5 rounded-full transition-transform ${f.counts ? 'translate-x-5 bg-onaccent' : 'bg-fg'}`} /></span>
+        </button>
+      )}
+
+      {
+        // to hereeeeeeee
+      }
+
 
       <label className="label" htmlFor="n">Notes</label>
       <textarea id="n" rows={2} className="field mb-4 resize-none" placeholder="What was this for?" value={f.notes || ''} onChange={(e) => set('notes', e.target.value)} />

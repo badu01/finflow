@@ -87,11 +87,32 @@ export default function TxDetailSheet({ tx, onClose, onEdit }) {
                 </>
               )}
               {t.type !== 'transfer' && <Line label={t.type === 'income' ? 'Payer' : 'Merchant'}>{t.merchant}</Line>}
+              {t.type === 'expense' && <Line label="Budget">{t.counts_toward_budget === false ? 'Outside budget' : 'Counts toward budget'}</Line>}
               <Line label="Location">{t.location}</Line>
               <Line label="Notes">{t.notes}</Line>
               <Line label="Repeats">{t.recurring_id ? 'Part of a recurring entry' : ''}</Line>
               <Line label="Added">{t.created_at ? new Date(t.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : ''}</Line>
             </div>
+
+
+
+              {
+                //edit toggle hereeee
+              }
+
+                          {t.type === 'expense' && (
+              <button type="button" role="switch" aria-checked={t.counts_toward_budget !== false} onClick={() => updateTx(t.id, { counts_toward_budget: t.counts_toward_budget === false })} className="flex items-center justify-between w-full bg-raised rounded-2xl px-4 py-3 text-left mt-4">
+                <span><span className="block text-sm">Deduct from budget</span><span className="block text-xs text-mute">{t.counts_toward_budget === false ? 'Not counted in daily or monthly budget' : 'Counted in daily and monthly budget'}</span></span>
+                <span className={`h-6 w-11 rounded-full p-0.5 shrink-0 ml-3 transition-colors ${t.counts_toward_budget !== false ? 'bg-accent' : 'bg-fg/15'}`}><span className={`block h-5 w-5 rounded-full transition-transform ${t.counts_toward_budget !== false ? 'translate-x-5 bg-onaccent' : 'bg-fg'}`} /></span>
+              </button>
+            )}
+
+            {
+              // till hereeeeee
+            }
+
+
+
 
             {t.type !== 'transfer' && (
               <div className="mt-4">

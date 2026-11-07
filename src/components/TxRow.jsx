@@ -34,7 +34,7 @@ export default function TxRow({ tx, onOpen, onEdit, onDuplicate, onDelete, swipe
       <Avatar tx={tx} />
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium truncate">{title}{tx.receipt_path && <Paperclip size={12} className="inline ml-1.5 -mt-0.5 text-mute" aria-label="Has receipt" />}</p>
-        <p className="text-xs text-mute truncate">{sub}</p>
+                <p className="text-xs text-mute truncate">{sub}{tx.type === 'expense' && tx.counts_toward_budget === false && <span className="ml-1.5 rounded-full bg-raised px-1.5 py-0.5 text-[10px]">Outside budget</span>}</p>
         {via && <p className="text-[11px] text-accent truncate flex items-center gap-1 mt-0.5">{ViaIcon && <ViaIcon size={11} className="shrink-0" />}<span className="truncate">{via}</span></p>}
       </div>
       <p className={`text-sm font-semibold tabular-nums ${tx.type === 'income' ? 'text-good' : ''}`}>{sign}{inr(tx.amount)}</p>

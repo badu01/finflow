@@ -12,6 +12,7 @@ export const between = (t, from, to) => { const d = new Date(t.occurred_at); ret
 export const sum = (l) => l.reduce((s, x) => s + Number(x.amount), 0)
 export const exp = (l) => l.filter((t) => t.type === 'expense')
 export const inc = (l) => l.filter((t) => t.type === 'income')
+export const budgeted = (l) => l.filter((t)=>t.counts_toward_budget !== false)
 
 export function byCategory(list) {
   const m = {}

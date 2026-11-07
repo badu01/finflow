@@ -136,7 +136,7 @@ export function DataProvider({ children }) {
           await addTx({
             type: r.type, amount: r.amount, category: r.category, subcategory: r.subcategory || null, merchant: r.merchant || '',
             payment_method: r.payment_method, account_id: r.account_id || null, to_account_id: null, source: r.source || null,
-            notes: r.notes || '', location: '', receipt_path: null, recurring_id: r.id, occurred_at: (when > new Date() ? new Date() : when).toISOString()
+            notes: r.notes || '', location: '', receipt_path: null, counts_toward_budget: r.counts_toward_budget !== false, recurring_id: r.id, occurred_at: (when > new Date() ? new Date() : when).toISOString()
           })
           next = advance(next, r.frequency); n++
         }
